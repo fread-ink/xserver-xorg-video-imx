@@ -24,7 +24,7 @@
 # _ladir passes a dummy rpath to libtool so the thing will actually link
 # TODO: -nostdlib/-Bstatic/-lgcc platform magic, not installing the .a, etc.
 
-NEON_CFLAGS=-march=armv7-a -mfpu=neon -mfloat-abi=softfp -Wa,-mfpu=neon
+NEON_CFLAGS=-march=armv7-a -mfpu=neon -mfloat-abi=hard -Wa,-mfpu=neon
 
 NEON_CCASFLAGS=$(NEON_CFLAGS) -mthumb-interwork
 NEON_ASFLAGS=-k -mcpu=cortex-a8 $(NEON_CCASFLAGS)
