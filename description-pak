@@ -1,0 +1,1 @@
+Xorg video driver for the i.MX chipset. This version of the driver depends on the proprietary binary-only z160 library.
