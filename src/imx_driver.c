@@ -80,11 +80,6 @@
 extern int MXXVInitializeAdaptor(ScrnInfoPtr, XF86VideoAdaptorPtr **);
 #endif
 
-/* For EXA (X acceleration) */
-extern Bool imxExaZ160Setup(int scrnIndex, ScreenPtr pScreen);
-extern Bool imxExaZ160GetPixmapProperties(
-		PixmapPtr pPixmap, void** pPhysAddr, int* pPitch);
-
 /* For X extension */
 extern void imxExtInit();
 
@@ -344,32 +339,9 @@ imxPreInit(ScrnInfoPtr pScrn, int flags)
 	xf86ProcessOptions(pScrn->scrnIndex, fPtr->pEntity->device->options, fPtr->pOptions);
 
 	/* NoAccel option */
-	fPtr->useAccel = TRUE;
-	if (xf86ReturnOptValBool(fPtr->pOptions, OPTION_NOACCEL, FALSE)) {
-		fPtr->useAccel = FALSE;
-	}
+  fPtr->useAccel = FALSE;
 
 	/* AccelMethod option */
-	if (fPtr->useAccel) {
-		s = xf86GetOptValString(fPtr->pOptions, OPTION_ACCELMETHOD);
-		if ((NULL != s) && (0 != xf86NameCmp(s, "EXA"))) {
-			fPtr->useAccel = FALSE;
-		}
-	} 
-
-	/* Load EXA module */
-	if (fPtr->useAccel) {
-		XF86ModReqInfo req;
-		int errmaj, errmin;
-		memset(&req, 0, sizeof(req));
-		req.majorversion = EXA_VERSION_MAJOR;
-		req.minorversion = EXA_VERSION_MINOR;
-		if (!LoadSubModule(pScrn->module, "exa", NULL, NULL, NULL, &req,
-					&errmaj, &errmin)) {
-			LoaderErrorMsg(NULL, "exa", errmaj, errmin);
-			goto errorPreInit;
-		}
-	}
 
 	/* Display pre-init */
 	if (!imxDisplayPreInit(pScrn)) {
@@ -699,24 +671,11 @@ imxScreenInit(SCREEN_INIT_ARGS_DECL)
 	xf86SetBlackWhitePixels(pScreen);
 
 	/* INIT ACCELERATION BEFORE INIT FOR BACKING STORE & SOFTWARE CURSOR */ 
-	if (fPtr->useAccel) {
-
-		if (!imxExaZ160Setup(pScrn->scrnIndex, pScreen)) {
-
-			fPtr->useAccel = FALSE;
-		}
-
-	}
+  fPtr->useAccel = FALSE;
 
 	/* note if acceleration is in use */
-	if (fPtr->useAccel) {
+  xf86DrvMsg(pScrn->scrnIndex, X_INFO, "No acceleration in use\n");
 
-		xf86DrvMsg(pScrn->scrnIndex, X_INFO, "IMX EXA acceleration setup successful\n");
-
-	} else {
-
-		xf86DrvMsg(pScrn->scrnIndex, X_INFO, "No acceleration in use\n");
-	}
 
 	/* Initialize for X extensions. */
 	imxExtInit();
@@ -801,33 +760,9 @@ IMXGetPixmapProperties(
 	void** pPhysAddr,
 	int* pPitch)
 {
-	/* Initialize values to be returned. */
-	*pPhysAddr = NULL;
-	*pPitch = 0;
 
-	/* Is there a pixmap? */
-	if (NULL == pPixmap) {
-		return FALSE;
-	}
-
-	/* Access screen associated with this pixmap. */
-	ScrnInfoPtr pScrn = xf86ScreenToScrn(pPixmap->drawable.pScreen);
-
-	/* Check if the screen associated with this pixmap has IMX driver. */
-	if (0 != strcmp(IMX_DRIVER_NAME, pScrn->driverName)) {
-		return FALSE;
-	}
-
-	/* Access driver specific content. */
-	ImxPtr fPtr = IMXPTR(pScrn);
-
-	/* Cannot process if not accelerating. */
-	if (!fPtr->useAccel) {
-		return FALSE;
-	}
-
-	/* If we get here, then query EXA portion of driver. */
-	return imxExaZ160GetPixmapProperties(pPixmap, pPhysAddr, pPitch);
+  /* not supported when acceleration turned off */
+  return FALSE;
 }
 
 static Bool

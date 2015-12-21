@@ -24,6 +24,8 @@
 # _ladir passes a dummy rpath to libtool so the thing will actually link
 # TODO: -nostdlib/-Bstatic/-lgcc platform magic, not installing the .a, etc.
 
+AM_CPPFLAGS=-I/usr/src/linux/include
+
 NEON_CFLAGS=-march=armv7-a -mfpu=neon -mfloat-abi=hard -Wa,-mfpu=neon
 
 NEON_CCASFLAGS=$(NEON_CFLAGS) -mthumb-interwork
@@ -31,11 +33,11 @@ NEON_ASFLAGS=-k -mcpu=cortex-a8 $(NEON_CCASFLAGS)
 
 # Use these two lines to enable Xvideo support
 #AM_CFLAGS = @XORG_CFLAGS@ -DRENDER -DCOMPOSITE -DMITSHM -DIMX_XVIDEO_ENABLE=1 $(NEON_CFLAGS)
-#imx_drv_la_LDFLAGS = -module -avoid-version -lz160 -lipu
+#imx_drv_la_LDFLAGS = -module -avoid-version -lipu
 
 # Or use these two lines to disable Xvideo support
 AM_CFLAGS = @XORG_CFLAGS@ -DRENDER -DCOMPOSITE -DMITSHM -DIMX_XVIDEO_ENABLE=0 $(NEON_CFLAGS)
-imx_drv_la_LDFLAGS = -module -avoid-version -lz160
+imx_drv_la_LDFLAGS = -module -avoid-version 
 
 AM_ASFLAGS = $(NEON_ASFLAGS)
 AM_CCASFLAGS = $(NEON_CCASFLAGS)
@@ -56,7 +58,6 @@ imx_drv_la_SOURCES = \
 	imx_ext.c \
 	imx_ext.h \
 	imx_xv_ipu.c \
-	imx_exa_z160.c \
 	imx_exa_offscreen.c \
 	neon_memcpy.S \
 	neon_memmove.S

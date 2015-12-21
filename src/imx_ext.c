@@ -33,13 +33,6 @@
 
 #include "imx_ext.h"
 
-/* External functions defined elsewhere in the driver. */
-extern Bool
-imxExaZ160GetPixmapProperties(
-	PixmapPtr pPixmap,	/* IN */
-	void** pPhysAddr,	/* OUT: pixmap phys addr, NULL if not GPU mem */
-	int* pPitch);		/* OUT: pixmap pitch, 0 if not in GPU mem */
-
 static DISPATCH_PROC(Proc_IMX_EXT_Dispatch);
 static DISPATCH_PROC(Proc_IMX_EXT_GetPixmapPhysAddr);
 static DISPATCH_PROC(SProc_IMX_EXT_Dispatch);
@@ -79,17 +72,8 @@ Proc_IMX_EXT_GetPixmapPhysAddr(ClientPtr client)
 		void* pPhysAddr;
 		int pitch;
 
-		/* Query the pixmap properties from the driver. */
-		if (imxExaZ160GetPixmapProperties(pPixmap, &pPhysAddr, &pitch)) {
-			rep.pixmapState = IMX_EXT_PixmapFramebuffer;
-			rep.pixmapPhysAddr = (CARD32)pPhysAddr;
-			rep.pixmapPitch = pitch;
-
 		/* Pixmap was defined, but is not in frame buffer */
-		} else {
-
-			rep.pixmapState = IMX_EXT_PixmapOther;
-		}
+		rep.pixmapState = IMX_EXT_PixmapOther;
 	}
 
 	/* Check if any reply values need byte swapping */
