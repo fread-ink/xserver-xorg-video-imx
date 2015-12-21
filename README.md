@@ -7,5 +7,20 @@ This is the x11r7 version of the imx xorg driver as included in buildroot 2015.0
 * 0005-xf86-video-imxfb-fix-m4-hardcodded-paths.patch
 * 0006-xserver-1.14-compat.patch
 
+This is an experimental and untested version of the driver which does not depend on any non-open binary blobs, but also does not have 2D hardware acceleration support.
 
+# Compile and install
+
+```
+# install dependencies
+sudo apt-get install build-essential checkinstall
+sudo apt-get build-dep xserver-xorg-video-fbdev
+
+# ensure that you have the fread kernel include files at /usr/src/linux/include
+
+# configure and compile
+./autogen.sh --prefix=/usr
+make
+sudo checkinstall -y --pkgname xserver-xorg-video-imx --pkgversion 0.0.1 -D make install # or just "make install"
+```
 
