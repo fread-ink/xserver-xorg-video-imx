@@ -21,6 +21,9 @@ sudo apt-get build-dep xserver-xorg-video-fbdev
 # configure and compile
 ./autogen.sh --prefix=/usr
 make
-sudo checkinstall -y --pkgname xserver-xorg-video-imx --pkgversion 0.0.1 -D make install # or just "make install"
+# ensure you have xserver-xorg-core installed
+sudo apt install xserver-xorg-core
+# install and generate .deb package (or use `make install` directly)
+sudo checkinstall -y --pkgname xserver-xorg-video-imx --pkgversion 0.0.1 -D make install
 ```
 
