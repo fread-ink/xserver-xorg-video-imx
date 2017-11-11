@@ -1,0 +1,19 @@
+Source: xserver-xorg-video-imx
+Section: x11
+Priority: optional
+Maintainer: Marc Juul <juul@fread.ink>
+Build-Depends: debhelper (>= 9), autotools-dev
+Standards-Version: 3.9.5
+
+Package: xserver-xorg-video-imx
+Section: x11
+Architecture: armhf
+Homepage: https://github.com/fread-ink/xserver-xorg-video-imx
+Provides: xorg-driver-video
+Priority: optional
+Depends: libc6 (>= 2.4), xorg-video-abi-18, xserver-xorg-core (>= 2:1.15.99.903)
+Description: X.Org X server -- imx 508 driver for fread.ink
+ This package provides the X.Org driver for the imx 508
+ electronic paper display controller (epdc).
+ This version of the driver does not support 2D acceleration
+ and does not depend on any proprietary code.

@@ -1,0 +1,5 @@
+xserver-xorg-video-imx (0.0.1-1) unstable; urgency=low
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Marc Juul <juul@fread.ink>  Sun, 05 Nov 2017 12:34:26 +0000
